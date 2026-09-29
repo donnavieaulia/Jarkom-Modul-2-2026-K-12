@@ -118,3 +118,8 @@ cat <<'EOF' > /root/soal2.sh
 ip route add default via 192.217.5.1 2>/dev/null
 EOF
 chmod +x /root/soal2.sh && /root/soal2.sh
+
+Pengujian no 2
+ping -c 3 google.com
+# atau
+ping -c 3 192.168.122.1
