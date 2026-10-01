@@ -1,125 +1,204 @@
-
+# =========================================================
 # ==== ROOTKIT ====
-# Meminta IP dari NAT1 (Internet/WAN) dan memasang IP Forwarding + NAT Masquerade
+# =========================================================
+
 cat <<'EOF' > /root/soal2.sh
 #!/bin/sh
+
+# Enable IP Forwarding
 sysctl -w net.ipv4.ip_forward=1
 
 # Minta IP otomatis untuk eth0 (WAN)
 dhclient eth0 2>/dev/null &
 
-# Clear aturan iptables lama & pasang MASQUERADE
+# Clear aturan NAT lama
 iptables -t nat -F
+
+# NAT Masquerade keluar melalui eth0
 iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 EOF
-chmod +x /root/soal2.sh && /root/soal2.sh
+
+chmod +x /root/soal2.sh
+/root/soal2.sh
 
 
+# =========================================================
 # ==== ALPHA ====
-cat <<'EOF' > /root/soal2.sh
-#!/bin/sh
-# Memastikan default gateway mengarah ke router rootkit
-ip route add default via 192.217.1.1 2>/dev/null
-EOF
-chmod +x /root/soal2.sh && /root/soal2.sh
+# Gateway: 192.217.4.1
+# =========================================================
 
-
-# ==== BETA ====
-cat <<'EOF' > /root/soal2.sh
-#!/bin/sh
-ip route add default via 192.217.1.1 2>/dev/null
-EOF
-chmod +x /root/soal2.sh && /root/soal2.sh
-
-
-# ==== GAMMA ====
-cat <<'EOF' > /root/soal2.sh
-#!/bin/sh
-ip route add default via 192.217.1.1 2>/dev/null
-EOF
-chmod +x /root/soal2.sh && /root/soal2.sh
-
-
-# ==== DELTA ====
-cat <<'EOF' > /root/soal2.sh
-#!/bin/sh
-ip route add default via 192.217.2.1 2>/dev/null
-EOF
-chmod +x /root/soal2.sh && /root/soal2.sh
-
-
-# ==== EPSILON ====
-cat <<'EOF' > /root/soal2.sh
-#!/bin/sh
-ip route add default via 192.217.2.1 2>/dev/null
-EOF
-chmod +x /root/soal2.sh && /root/soal2.sh
-
-
-# ==== ABBEY ====
-cat <<'EOF' > /root/soal2.sh
-#!/bin/sh
-ip route add default via 192.217.3.1 2>/dev/null
-EOF
-chmod +x /root/soal2.sh && /root/soal2.sh
-
-
-# ==== PENNY ====
 cat <<'EOF' > /root/soal2.sh
 #!/bin/sh
 ip route add default via 192.217.4.1 2>/dev/null
 EOF
-chmod +x /root/soal2.sh && /root/soal2.sh
+
+chmod +x /root/soal2.sh
+/root/soal2.sh
 
 
+# =========================================================
+# ==== BETA ====
+# Gateway: 192.217.4.1
+# =========================================================
+
+cat <<'EOF' > /root/soal2.sh
+#!/bin/sh
+ip route add default via 192.217.4.1 2>/dev/null
+EOF
+
+chmod +x /root/soal2.sh
+/root/soal2.sh
+
+
+# =========================================================
+# ==== GAMMA ====
+# Gateway: 192.217.4.1
+# =========================================================
+
+cat <<'EOF' > /root/soal2.sh
+#!/bin/sh
+ip route add default via 192.217.4.1 2>/dev/null
+EOF
+
+chmod +x /root/soal2.sh
+/root/soal2.sh
+
+
+# =========================================================
+# ==== DELTA ====
+# Gateway: 192.217.5.1
+# =========================================================
+
+cat <<'EOF' > /root/soal2.sh
+#!/bin/sh
+ip route add default via 192.217.5.1 2>/dev/null
+EOF
+
+chmod +x /root/soal2.sh
+/root/soal2.sh
+
+
+# =========================================================
+# ==== EPSILON ====
+# Gateway: 192.217.5.1
+# =========================================================
+
+cat <<'EOF' > /root/soal2.sh
+#!/bin/sh
+ip route add default via 192.217.5.1 2>/dev/null
+EOF
+
+chmod +x /root/soal2.sh
+/root/soal2.sh
+
+
+# =========================================================
+# ==== ABBEY ====
+# Gateway: 192.217.2.1
+# =========================================================
+
+cat <<'EOF' > /root/soal2.sh
+#!/bin/sh
+ip route add default via 192.217.2.1 2>/dev/null
+EOF
+
+chmod +x /root/soal2.sh
+/root/soal2.sh
+
+
+# =========================================================
+# ==== PENNY ====
+# Gateway: 192.217.3.1
+# =========================================================
+
+cat <<'EOF' > /root/soal2.sh
+#!/bin/sh
+ip route add default via 192.217.3.1 2>/dev/null
+EOF
+
+chmod +x /root/soal2.sh
+/root/soal2.sh
+
+
+# =========================================================
 # ==== PRAB ====
+# Gateway: 192.217.1.1
+# =========================================================
+
 cat <<'EOF' > /root/soal2.sh
 #!/bin/sh
-ip route add default via 192.217.5.1 2>/dev/null
+ip route add default via 192.217.1.1 2>/dev/null
 EOF
-chmod +x /root/soal2.sh && /root/soal2.sh
+
+chmod +x /root/soal2.sh
+/root/soal2.sh
 
 
+# =========================================================
 # ==== TEDD ====
+# Gateway: 192.217.1.1
+# =========================================================
+
 cat <<'EOF' > /root/soal2.sh
 #!/bin/sh
-ip route add default via 192.217.5.1 2>/dev/null
+ip route add default via 192.217.1.1 2>/dev/null
 EOF
-chmod +x /root/soal2.sh && /root/soal2.sh
+
+chmod +x /root/soal2.sh
+/root/soal2.sh
 
 
+# =========================================================
 # ==== OBLADI ====
+# Gateway: 192.217.1.1
+# =========================================================
+
 cat <<'EOF' > /root/soal2.sh
 #!/bin/sh
-ip route add default via 192.217.5.1 2>/dev/null
+ip route add default via 192.217.1.1 2>/dev/null
 EOF
-chmod +x /root/soal2.sh && /root/soal2.sh
+
+chmod +x /root/soal2.sh
+/root/soal2.sh
 
 
+# =========================================================
 # ==== DESMOND ====
+# Gateway: 192.217.1.1
+# =========================================================
+
 cat <<'EOF' > /root/soal2.sh
 #!/bin/sh
-ip route add default via 192.217.5.1 2>/dev/null
+ip route add default via 192.217.1.1 2>/dev/null
 EOF
-chmod +x /root/soal2.sh && /root/soal2.sh
+
+chmod +x /root/soal2.sh
+/root/soal2.sh
 
 
+# =========================================================
 # ==== OBLADA ====
+# Gateway: 192.217.1.1
+# =========================================================
+
 cat <<'EOF' > /root/soal2.sh
 #!/bin/sh
-ip route add default via 192.217.5.1 2>/dev/null
+ip route add default via 192.217.1.1 2>/dev/null
 EOF
-chmod +x /root/soal2.sh && /root/soal2.sh
+
+chmod +x /root/soal2.sh
+/root/soal2.sh
 
 
+# =========================================================
 # ==== MOLLY ====
+# Gateway: 192.217.1.1
+# =========================================================
+
 cat <<'EOF' > /root/soal2.sh
 #!/bin/sh
-ip route add default via 192.217.5.1 2>/dev/null
+ip route add default via 192.217.1.1 2>/dev/null
 EOF
-chmod +x /root/soal2.sh && /root/soal2.sh
 
-Pengujian no 2
-ping -c 3 google.com
-# atau
-ping -c 3 192.168.122.1
+chmod +x /root/soal2.sh
+/root/soal2.sh
