@@ -1,84 +1,15 @@
-# Laporan Resmi Praktikum Modul 2 - Jarkom 2026
+# Jarkom-Modul-2-2026-K-21
 
-**Komunikasi Data & Jaringan Komputer - Shadow Net Operation (The Mesh)**
+| Nama                          | NRP        |
+| ----------------------------- | ---------- |
+| Donnavie Aulia                | 5027251093 |
+| Ndaru Satria Tama             | 5027251124 |
 
-| | |
-|---|---|
-| Kelompok | **K-12** |
-| Domain | `k12.com` |
-| Prefix IP | `192.217.x.x` |
-| Image Docker | Debian (`ardhptr21/debinet:latest`) |
-| Tools | GNS3 |
 
-## Anggota Kelompok
-
-| No | Nama | NRP |
-|---|---|---|
-| 1 | _(isi nama anggota 1)_ | _(isi NRP)_ |
-| 2 | _(isi nama anggota 2)_ | _(isi NRP)_ |
-| 3 | _(isi nama anggota 3)_ | _(isi NRP)_ |
-
----
-
-## Daftar Isi
-
-- [Topologi dan Pembagian IP](#topologi-dan-pembagian-ip)
-- [Struktur Repository](#struktur-repository)
-- [Persiapan dan Urutan Pengerjaan](#persiapan-dan-urutan-pengerjaan)
-
-- [Soal 1: IP Address dan Default Gateway](#soal-1)
-- [Soal 2: NAT dan Akses Internet](#soal-2)
-- [Soal 3: Routing Internal dan Resolver Awal](#soal-3)
-- [Soal 4: DNS Master (prab) dan Slave (tedd)](#soal-4)
-- [Soal 5: Hostname Sistem dan A Record Seluruh Node](#soal-5)
-- [Soal 6: Zone Transfer dan Serial SOA](#soal-6)
-- [Soal 7: Record vault, core, dan CNAME](#soal-7)
-- [Soal 8: Reverse DNS (PTR)](#soal-8)
-- [Soal 9: Web Statis Apache dan Autoindex /arsip](#soal-9)
-- [Soal 10: Web Dinamis Nginx + PHP-FPM dan URL /profil](#soal-10)
-- [Soal 11: Reverse Proxy Penny (Apache) dan Abbey (Nginx)](#soal-11)
-- [Soal 12: Basic Authentication /admin di Penny](#soal-12)
-- [Soal 13: Redirect Kanonik 301 / 302](#soal-13)
-- [Soal 14: Log IP Asli Client](#soal-14)
-- [Soal 15: Jalur /eternal (PHP) di Penny dan /orion (Statis) di Abbey](#soal-15)
-- [Soal 16: Stress Test ApacheBench (250 request, concurrency 10)](#soal-16)
-- [Soal 17: TXT Record Klien](#soal-17)
-- [Soal 18: TTL 15 Detik dan Perubahan IP Fiktif Abbey](#soal-18)
-- [Soal 19: CNAME Eksternal outbound.k12.com ke http.badssl.com](#soal-19)
-- [Soal 20: Autostart dan Pengecekan Setelah Restart](#soal-20)
-- [Ringkasan Daftar Screenshot](#ringkasan-daftar-screenshot)
-- [Catatan dan Troubleshooting](#catatan-dan-troubleshooting)
-
----
 
 ## Topologi dan Pembagian IP
+<img width="2044" height="1286" alt="Screenshot 2026-10-04 at 22 24 47" src="https://github.com/user-attachments/assets/c4b7e53d-968c-452b-b06e-46467e25f73c" />
 
-```mermaid
-graph TD
-    NAT((NAT)) --- R[rootkit<br/>router]
-    R -- eth1 --- SW1[Switch1]
-    SW1 --- SW2[Switch2]
-    SW1 --- SW3[Switch3]
-    SW2 --- prab
-    SW2 --- tedd
-    SW3 --- obladi
-    SW3 --- desmond
-    SW3 --- oblada
-    SW3 --- molly
-    R -- eth2 --- SW4[Switch4] --- abbey
-    R -- eth3 --- SW5[Switch5] --- penny
-    R -- eth4 --- SW6[Switch6]
-    SW6 --- alpha
-    SW6 --- beta
-    SW6 --- gamma
-    R -- eth5 --- SW7[Switch7]
-    SW7 --- delta
-    SW7 --- epsilon
-```
-
-**Screenshot topologi GNS3 (wajib):**
-
-![Topologi GNS3](images/00-topologi/topologi.png)
 
 | Node | Peran | Interface | IP / Prefix | Gateway | Switch |
 |---|---|---|---|---|---|
@@ -102,75 +33,7 @@ graph TD
 | delta | Klien sayap kanan | eth0 | 192.217.5.2/24 | 192.217.5.1 | Switch7 |
 | epsilon | Klien sayap kanan | eth0 | 192.217.5.3/24 | 192.217.5.1 | Switch7 |
 
-**Glosarium singkat:** area *vault* = obladi + desmond (statis, Apache); area *core* = oblada + molly (dinamis, Nginx + PHP-FPM); gerbang penyaring = penny (Apache, ke vault) dan abbey (Nginx, ke core); nameserver = prab (master) dan tedd (slave).
 
----
-
-## Struktur Repository
-
-```text
-Jarkom-Modul-2-2026-K-12/
-├── README.md                  # laporan resmi (file ini)
-├── SCREENSHOT-CHECKLIST.md    # daftar lengkap screenshot yang harus diambil
-├── script/                    # semua script (diletakkan di /root pada node GNS3)
-│   ├── common.sh
-│   ├── 01-network.sh
-│   ├── 02-nat.sh
-│   ├── 03-resolver-awal.sh
-│   ├── 03-resolver.sh
-│   ├── 04-dns.sh
-│   ├── 09-vault.sh
-│   ├── 10-core.sh
-│   ├── 11-penny.sh
-│   ├── 11-abbey.sh
-│   ├── 16-benchmark.sh
-│   ├── 18-cache.sh
-│   ├── dns-edit.py
-│   ├── 20-autostart.sh
-│   ├── 20-snapshot-dns.sh
-│   └── start-command.txt
-├── images/                    # screenshot bukti, satu folder per nomor soal
-│   ├── 00-topologi/
-│   ├── 01/ ... 20/
-└── gns3/                      # (opsional) export project GNS3
-```
-
----
-
-## Persiapan dan Urutan Pengerjaan
-
-Semua script diletakkan di direktori `/root` pada masing-masing node, sesuai ketentuan soal. Cara membuat file di node (copy-paste isi script dari folder [`script/`](script/) ke console node):
-
-```bash
-cat > /root/NAMA_SCRIPT.sh <<'K12_FILE_END'
-# ... isi script ...
-K12_FILE_END
-chmod +x /root/NAMA_SCRIPT.sh
-```
-
-`common.sh` dibuat **pertama kali di semua 14 node** karena dipakai (`source`) oleh script lain.
-
-| Urutan | Script | Node | Soal |
-|---|---|---|---|
-| 1 | `common.sh` | semua 14 node | - |
-| 2 | `01-network.sh` | semua 14 node (sesuai hostname) | 1, 5 |
-| 3 | `02-nat.sh` | rootkit | 2 |
-| 4 | `03-resolver-awal.sh` | semua non-router | 3 |
-| 5 | `04-dns.sh` | prab, lalu tedd | 4, 5, 6, 7, 8 |
-| 6 | `03-resolver.sh` | semua non-router | 4 |
-| 7 | `09-vault.sh` | obladi, desmond | 9, 14 |
-| 8 | `10-core.sh` | oblada, molly | 10, 14 |
-| 9 | `11-penny.sh` | penny | 11, 12, 13, 15 |
-| 10 | `11-abbey.sh` | abbey | 11, 13, 15 |
-| 11 | `16-benchmark.sh` | alpha | 16 |
-| 12 | `dns-edit.py txt` | prab | 17 |
-| 13 | `18-cache.sh`, `dns-edit.py ttl15/fake/restore` | alpha, prab | 18 |
-| 14 | `dns-edit.py outbound` | prab | 19 |
-| 15 | `20-autostart.sh`, `20-snapshot-dns.sh` | semua node | 20 |
-
-> **Peringatan:** menjalankan ulang `04-dns.sh` mengembalikan zona dasar, sehingga tambahan nomor 17 dan 19 harus dijalankan lagi.
-
----
 
 ## Soal 1
 ### IP Address dan Default Gateway
@@ -191,12 +54,10 @@ bash /root/01-network.sh "$(hostname -s)"
 
 **Penjelasan:** Skrip membaca nama node lalu memilih alamat dari tabel. Rootkit memakai `eth0` DHCP (ke NAT) dan `eth1`-`eth5` sebagai gateway tiap segmen (`192.217.1.1` s.d. `192.217.5.1`). Node lain memakai `eth0` statis `/24` dengan gateway `.1` pada segmen masing-masing. Konfigurasi ditulis ke `/etc/network/interfaces` agar persisten, lalu diterapkan langsung dengan `ip address replace` dan `ip route replace`.
 
-#### Verifikasi (jalankan lalu screenshot)
 
 **CONSOLE ROOTKIT.**
 
 ```bash
-# PASTE DI CONSOLE ROOTKIT
 date -Is
 hostname
 ip -br -4 address
@@ -206,7 +67,6 @@ ip -4 route
 **SETIAP NODE NON-ROUTER, SATU PER SATU.**
 
 ```bash
-# PASTE DI SETIAP NODE NON-ROUTER, SATU PER SATU
 date -Is
 hostname
 ip -br -4 address
@@ -221,84 +81,169 @@ fi
 
 **Target hasil:** IP dan gateway harus sesuai tabel; ping gateway mendapat balasan. Non-router berarti seluruh node di atas selain Rootkit.
 
-#### Screenshot yang harus diambil
+## Konfigurasi Jaringan
 
-| No | File | Node | Perintah | Yang harus terlihat |
-|---|---|---|---|---|
-| 1 | `images/01/01-rootkit.png` | rootkit | `date -Is; hostname; ip -br -4 address; ip -4 route` | eth0 dapat IP DHCP; eth1-eth5 = 192.217.1-5.1/24; default route lewat eth0 |
-| 2 | `images/01/01-alpha.png` | alpha | blok check non-router | IP 192.217.4.2, gateway 192.217.4.1, ping gateway balas |
-| 3 | `images/01/01-beta.png` | beta | blok check non-router | IP 192.217.4.3, gateway 192.217.4.1 |
-| 4 | `images/01/01-gamma.png` | gamma | blok check non-router | IP 192.217.4.4, gateway 192.217.4.1 |
-| 5 | `images/01/01-delta.png` | delta | blok check non-router | IP 192.217.5.2, gateway 192.217.5.1 |
-| 6 | `images/01/01-epsilon.png` | epsilon | blok check non-router | IP 192.217.5.3, gateway 192.217.5.1 |
-| 7 | `images/01/01-prab.png` | prab | blok check non-router | IP 192.217.1.2, gateway 192.217.1.1 |
-| 8 | `images/01/01-tedd.png` | tedd | blok check non-router | IP 192.217.1.3, gateway 192.217.1.1 |
-| 9 | `images/01/01-obladi.png` | obladi | blok check non-router | IP 192.217.1.4, gateway 192.217.1.1 |
-| 10 | `images/01/01-desmond.png` | desmond | blok check non-router | IP 192.217.1.5, gateway 192.217.1.1 |
-| 11 | `images/01/01-oblada.png` | oblada | blok check non-router | IP 192.217.1.6, gateway 192.217.1.1 |
-| 12 | `images/01/01-molly.png` | molly | blok check non-router | IP 192.217.1.7, gateway 192.217.1.1 |
-| 13 | `images/01/01-abbey.png` | abbey | blok check non-router | IP 192.217.2.2, gateway 192.217.2.1 |
-| 14 | `images/01/01-penny.png` | penny | blok check non-router | IP 192.217.3.2, gateway 192.217.3.1 |
+- rootkit
 
-#### Hasil
+```text
+auto eth0
+iface eth0 inet dhcp
 
-**rootkit** - eth0 dapat IP DHCP; eth1-eth5 = 192.217.1-5.1/24; default route lewat eth0
+auto eth1
+iface eth1 inet static
+    address 192.217.1.1
+    netmask 255.255.255.0
 
-![Soal 1 - rootkit](images/01/01-rootkit.png)
+auto eth2
+iface eth2 inet static
+    address 192.217.2.1
+    netmask 255.255.255.0
 
-**alpha** - IP 192.217.4.2, gateway 192.217.4.1, ping gateway balas
+auto eth3
+iface eth3 inet static
+    address 192.217.3.1
+    netmask 255.255.255.0
 
-![Soal 1 - alpha](images/01/01-alpha.png)
+auto eth4
+iface eth4 inet static
+    address 192.217.4.1
+    netmask 255.255.255.0
 
-**beta** - IP 192.217.4.3, gateway 192.217.4.1
+auto eth5
+iface eth5 inet static
+    address 192.217.5.1
+    netmask 255.255.255.0
+```
 
-![Soal 1 - beta](images/01/01-beta.png)
+- prab
 
-**gamma** - IP 192.217.4.4, gateway 192.217.4.1
+```text
+auto eth0
+iface eth0 inet static
+    address 192.217.1.2
+    netmask 255.255.255.0
+    gateway 192.217.1.1
+```
 
-![Soal 1 - gamma](images/01/01-gamma.png)
+- tedd
 
-**delta** - IP 192.217.5.2, gateway 192.217.5.1
+```text
+auto eth0
+iface eth0 inet static
+    address 192.217.1.3
+    netmask 255.255.255.0
+    gateway 192.217.1.1
+```
 
-![Soal 1 - delta](images/01/01-delta.png)
+- obladi
 
-**epsilon** - IP 192.217.5.3, gateway 192.217.5.1
+```text
+auto eth0
+iface eth0 inet static
+    address 192.217.1.4
+    netmask 255.255.255.0
+    gateway 192.217.1.1
+```
 
-![Soal 1 - epsilon](images/01/01-epsilon.png)
+- desmond
 
-**prab** - IP 192.217.1.2, gateway 192.217.1.1
+```text
+auto eth0
+iface eth0 inet static
+    address 192.217.1.5
+    netmask 255.255.255.0
+    gateway 192.217.1.1
+```
 
-![Soal 1 - prab](images/01/01-prab.png)
+- oblada
 
-**tedd** - IP 192.217.1.3, gateway 192.217.1.1
+```text
+auto eth0
+iface eth0 inet static
+    address 192.217.1.6
+    netmask 255.255.255.0
+    gateway 192.217.1.1
+```
 
-![Soal 1 - tedd](images/01/01-tedd.png)
+- molly
 
-**obladi** - IP 192.217.1.4, gateway 192.217.1.1
+```text
+auto eth0
+iface eth0 inet static
+    address 192.217.1.7
+    netmask 255.255.255.0
+    gateway 192.217.1.1
+```
 
-![Soal 1 - obladi](images/01/01-obladi.png)
+- abbey
 
-**desmond** - IP 192.217.1.5, gateway 192.217.1.1
+```text
+auto eth0
+iface eth0 inet static
+    address 192.217.2.2
+    netmask 255.255.255.0
+    gateway 192.217.2.1
+```
 
-![Soal 1 - desmond](images/01/01-desmond.png)
+- penny
 
-**oblada** - IP 192.217.1.6, gateway 192.217.1.1
+```text
+auto eth0
+iface eth0 inet static
+    address 192.217.3.2
+    netmask 255.255.255.0
+    gateway 192.217.3.1
+```
 
-![Soal 1 - oblada](images/01/01-oblada.png)
+- alpha
 
-**molly** - IP 192.217.1.7, gateway 192.217.1.1
+```text
+auto eth0
+iface eth0 inet static
+    address 192.217.4.2
+    netmask 255.255.255.0
+    gateway 192.217.4.1
+```
 
-![Soal 1 - molly](images/01/01-molly.png)
+- beta
 
-**abbey** - IP 192.217.2.2, gateway 192.217.2.1
+```text
+auto eth0
+iface eth0 inet static
+    address 192.217.4.3
+    netmask 255.255.255.0
+    gateway 192.217.4.1
+```
 
-![Soal 1 - abbey](images/01/01-abbey.png)
+- gamma
 
-**penny** - IP 192.217.3.2, gateway 192.217.3.1
+```text
+auto eth0
+iface eth0 inet static
+    address 192.217.4.4
+    netmask 255.255.255.0
+    gateway 192.217.4.1
+```
 
-![Soal 1 - penny](images/01/01-penny.png)
+- delta
 
----
+```text
+auto eth0
+iface eth0 inet static
+    address 192.217.5.2
+    netmask 255.255.255.0
+    gateway 192.217.5.1
+```
+
+- epsilon
+
+```text
+auto eth0
+iface eth0 inet static
+    address 192.217.5.3
+    netmask 255.255.255.0
+    gateway 192.217.5.1
+```
 
 ## Soal 2
 ### NAT dan Akses Internet
@@ -319,7 +264,6 @@ bash /root/02-nat.sh
 
 **Penjelasan:** `net.ipv4.ip_forward=1` dibuat permanen lewat `/etc/sysctl.d/99-lab-router.conf`. Aturan `iptables -t nat -A POSTROUTING -s 192.217.0.0/16 -o eth0 -j MASQUERADE` meneruskan trafik internal keluar lewat WAN. Aturan `FORWARD` mengizinkan trafik dari jaringan internal serta balasan `ESTABLISHED,RELATED`. Setiap aturan dicek dulu dengan `-C` sehingga skrip aman dijalankan berulang.
 
-#### Verifikasi (jalankan lalu screenshot)
 
 **CONSOLE ROOTKIT.**
 
@@ -342,45 +286,9 @@ ping -c 3 -W 2 1.1.1.1
 ```
 
 **Target hasil:** IP forwarding bernilai 1, MASQUERADE keluar eth0, dan host internal dapat melakukan ping ke 1.1.1.1.
+<img width="1286" height="1078" alt="2 abbey" src="https://github.com/user-attachments/assets/63b51e7d-33d4-4bd5-ab2a-2cec85921446" />
+<img width="1288" height="1078" alt="2 alpha" src="https://github.com/user-attachments/assets/3d956b01-9990-4f74-8030-283b23689958" />
 
-#### Screenshot yang harus diambil
-
-| No | File | Node | Perintah | Yang harus terlihat |
-|---|---|---|---|---|
-| 1 | `images/02/02-rootkit-nat.png` | rootkit | blok check rootkit | eth0 berIP DHCP, `ip_forward = 1`, aturan MASQUERADE, aturan FORWARD |
-| 2 | `images/02/02-ping-alpha.png` | alpha | `ping -c 3 -W 2 1.1.1.1` | 0% packet loss |
-| 3 | `images/02/02-ping-delta.png` | delta | `ping -c 3 -W 2 1.1.1.1` | 0% packet loss |
-| 4 | `images/02/02-ping-prab.png` | prab | `ping -c 3 -W 2 1.1.1.1` | 0% packet loss (segmen Switch1) |
-| 5 | `images/02/02-ping-abbey.png` | abbey | `ping -c 3 -W 2 1.1.1.1` | 0% packet loss |
-| 6 | `images/02/02-ping-penny.png` | penny | `ping -c 3 -W 2 1.1.1.1` | 0% packet loss |
-
-#### Hasil
-
-**rootkit** - eth0 berIP DHCP, `ip_forward = 1`, aturan MASQUERADE, aturan FORWARD
-
-![Soal 2 - rootkit](images/02/02-rootkit-nat.png)
-
-**alpha** - 0% packet loss
-
-![Soal 2 - alpha](images/02/02-ping-alpha.png)
-
-**delta** - 0% packet loss
-
-![Soal 2 - delta](images/02/02-ping-delta.png)
-
-**prab** - 0% packet loss (segmen Switch1)
-
-![Soal 2 - prab](images/02/02-ping-prab.png)
-
-**abbey** - 0% packet loss
-
-![Soal 2 - abbey](images/02/02-ping-abbey.png)
-
-**penny** - 0% packet loss
-
-![Soal 2 - penny](images/02/02-ping-penny.png)
-
----
 
 ## Soal 3
 ### Routing Internal dan Resolver Awal
@@ -397,7 +305,7 @@ ping -c 3 -W 2 1.1.1.1
 Buat `common.sh` di semua 14 node terlebih dahulu:
 
 ```bash
-cat /root/common.sh | head -5   # pastikan file sudah ada
+cat /root/common.sh | head -5  
 ```
 
 Di setiap node non-router:
@@ -424,29 +332,8 @@ cat /etc/resolv.conf
 
 **Target hasil:** Ping antarsegmen membuktikan routing melalui Rootkit. Setelah konfigurasi lengkap, resolver non-router harus berurutan Prab, Tedd, lalu NAT.
 
-#### Screenshot yang harus diambil
+<img width="1287" height="1078" alt="3 delta" src="https://github.com/user-attachments/assets/939a3b51-ffce-4a56-a162-8dd525039b37" />
 
-| No | File | Node | Perintah | Yang harus terlihat |
-|---|---|---|---|---|
-| 1 | `images/03/03-alpha-ping-semua.png` | alpha | blok check nomor 3 | 14 tujuan ping berhasil; `resolv.conf` berisi 192.168.122.1 (bagian ping cukup di-scroll, ambil 2 SS bila panjang) |
-| 2 | `images/03/03-delta-ping-semua.png` | delta | blok check nomor 3 | 14 tujuan ping berhasil dari segmen kanan |
-| 3 | `images/03/03-host-lain.png` | salah satu: prab / penny / abbey / obladi | blok check nomor 3 | bukti tambahan dari segmen berbeda (opsional tapi disarankan) |
-
-#### Hasil
-
-**alpha** - 14 tujuan ping berhasil; `resolv.conf` berisi 192.168.122.1 (bagian ping cukup di-scroll, ambil 2 SS bila panjang)
-
-![Soal 3 - alpha](images/03/03-alpha-ping-semua.png)
-
-**delta** - 14 tujuan ping berhasil dari segmen kanan
-
-![Soal 3 - delta](images/03/03-delta-ping-semua.png)
-
-**salah satu: prab / penny / abbey / obladi** - bukti tambahan dari segmen berbeda (opsional tapi disarankan)
-
-![Soal 3 - salah satu: prab / penny / abbey / obladi](images/03/03-host-lain.png)
-
----
 
 ## Soal 4
 ### DNS Master (prab) dan Slave (tedd)
@@ -474,12 +361,10 @@ bash /root/03-resolver.sh
 
 **Penjelasan:** `named.conf.options` memuat `forwarders { 192.168.122.1; }` dan membatasi query/recursion ke ACL `lab`. Pada prab, zona `k12.com` bertipe `master` dengan `notify yes`, `also-notify` dan `allow-transfer` ke `192.217.1.3`. SOA menunjuk `prab.k12.com.` dengan serial berformat `YYYYMMDDnn`. A record apex diarahkan ke `192.217.3.2` (penny). Tedd bertipe `slave` dengan `masters { 192.217.1.2; }` sehingga jawaban Tedd authoritative (flag `aa`).
 
-#### Verifikasi (jalankan lalu screenshot)
 
 **CONSOLE PRAB.**
 
 ```bash
-# PASTE DI CONSOLE PRAB
 hostname
 named-checkconf
 named-checkzone k12.com /etc/bind/db.k12.com
@@ -490,7 +375,6 @@ cat /etc/bind/named.conf.options
 **CONSOLE ALPHA.**
 
 ```bash
-# PASTE DI CONSOLE ALPHA
 hostname
 for dns in 192.217.1.2 192.217.1.3; do
     printf '\nDNS %s\n' "$dns"
@@ -504,29 +388,10 @@ done
 
 **Target hasil:** SOA menunjuk Prab, NS Prab/Tedd tersedia, apex k12.com ke 192.217.3.2, dan respons kedua DNS memiliki NOERROR serta flag aa. Transfer/notify Prab menuju Tedd 192.217.1.3.
 
-#### Screenshot yang harus diambil
+<img width="1286" height="1078" alt="4 alpha" src="https://github.com/user-attachments/assets/764920b7-7ae4-4476-86bf-98ced1261219" />
 
-| No | File | Node | Perintah | Yang harus terlihat |
-|---|---|---|---|---|
-| 1 | `images/04/04-prab-config.png` | prab | blok check Prab | `named-checkconf` bersih, `zone "k12.com" OK`, isi `named.conf.local` dan `named.conf.options` (scroll bila panjang) |
-| 2 | `images/04/04-alpha-dig-prab-tedd.png` | alpha | blok check Alpha | SOA/NS/A dari 192.217.1.2 dan 192.217.1.3: NOERROR dan flag `aa` |
-| 3 | `images/04/04-resolv-conf.png` | minimal alpha dan satu node lain | `cat /etc/resolv.conf` | urutan 192.217.1.2, 192.217.1.3, 192.168.122.1 |
+<img width="1286" height="1078" alt="4 prab" src="https://github.com/user-attachments/assets/a0649cf1-6a87-4729-99cd-d8d5be4d4982" />
 
-#### Hasil
-
-**prab** - `named-checkconf` bersih, `zone "k12.com" OK`, isi `named.conf.local` dan `named.conf.options` (scroll bila panjang)
-
-![Soal 4 - prab](images/04/04-prab-config.png)
-
-**alpha** - SOA/NS/A dari 192.217.1.2 dan 192.217.1.3: NOERROR dan flag `aa`
-
-![Soal 4 - alpha](images/04/04-alpha-dig-prab-tedd.png)
-
-**minimal alpha dan satu node lain** - urutan 192.217.1.2, 192.217.1.3, 192.168.122.1
-
-![Soal 4 - minimal alpha dan satu node lain](images/04/04-resolv-conf.png)
-
----
 
 ## Soal 5
 ### Hostname Sistem dan A Record Seluruh Node
