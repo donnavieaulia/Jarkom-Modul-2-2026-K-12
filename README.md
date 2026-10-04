@@ -707,29 +707,6 @@ grep -nE 'upstream|server 192|proxy_pass|proxy_set_header' /etc/nginx/sites-avai
 
 **Target hasil:** WWW dilayani Obladi dan Desmond, static dilayani Oblada dan Molly. Kedua proxy meneruskan Host dan X-Real-IP. Urutan backend tidak harus bergantian persis.
 
-#### Screenshot yang harus diambil
-
-| No | File | Node | Perintah | Yang harus terlihat |
-|---|---|---|---|---|
-| 1 | `images/11/11-alpha-distribusi.png` | alpha | loop 10 request `www` dan `static` | header `X-Backend` bergantian: www -> obladi/desmond, static -> oblada/molly (scroll, ambil 2 SS bila perlu) |
-| 2 | `images/11/11-penny-config.png` | penny | blok check Penny | `Syntax OK` dan baris `ProxyPreserveHost`, `X-Real-IP`, `BalancerMember`, `lbmethod` |
-| 3 | `images/11/11-abbey-config.png` | abbey | blok check Abbey | `nginx -t` ok dan baris `upstream`, `proxy_pass`, `proxy_set_header` |
-
-#### Hasil
-
-**alpha** - header `X-Backend` bergantian: www -> obladi/desmond, static -> oblada/molly (scroll, ambil 2 SS bila perlu)
-
-![Soal 11 - alpha](images/11/11-alpha-distribusi.png)
-
-**penny** - `Syntax OK` dan baris `ProxyPreserveHost`, `X-Real-IP`, `BalancerMember`, `lbmethod`
-
-![Soal 11 - penny](images/11/11-penny-config.png)
-
-**abbey** - `nginx -t` ok dan baris `upstream`, `proxy_pass`, `proxy_set_header`
-
-![Soal 11 - abbey](images/11/11-abbey-config.png)
-
----
 
 ## Soal 12
 ### Basic Authentication /admin di Penny
@@ -759,19 +736,7 @@ curl --noproxy '*' --max-time 10 -sS -D - -o /dev/null http://www.k12.com/admin
 
 **Target hasil:** tanpa kredensial atau password salah mendapat 401. Kredensial benar mendapat 200 dan halaman Admin Penny. /admin tanpa slash tetap terlindungi.
 
-#### Screenshot yang harus diambil
 
-| No | File | Node | Perintah | Yang harus terlihat |
-|---|---|---|---|---|
-| 1 | `images/12/12-alpha-auth.png` | alpha | blok check nomor 12 | tanpa kredensial 401, password salah 401, kredensial benar 200 + halaman "Admin Penny", `/admin` tanpa slash tetap 401 |
-
-#### Hasil
-
-**alpha** - tanpa kredensial 401, password salah 401, kredensial benar 200 + halaman "Admin Penny", `/admin` tanpa slash tetap 401
-
-![Soal 12 - alpha](images/12/12-alpha-auth.png)
-
----
 
 ## Soal 13
 ### Redirect Kanonik 301 / 302
@@ -804,19 +769,6 @@ curl --noproxy '*' --max-time 10 -sS -I 'http://abbey.k12.com/profil?cek=1'
 
 **Target hasil:** Periksa status dan header Location. Path serta query string harus ikut dipertahankan. Check tidak memakai -L agar status redirect awal terlihat.
 
-#### Screenshot yang harus diambil
-
-| No | File | Node | Perintah | Yang harus terlihat |
-|---|---|---|---|---|
-| 1 | `images/13/13-alpha-redirect.png` | alpha | blok check nomor 13 | IP/`penny.k12.com` -> 301 `Location: http://www.k12.com/`; IP/`abbey.k12.com` -> 302 `Location: http://static.k12.com/`; path dan query ikut terbawa |
-
-#### Hasil
-
-**alpha** - IP/`penny.k12.com` -> 301 `Location: http://www.k12.com/`; IP/`abbey.k12.com` -> 302 `Location: http://static.k12.com/`; path dan query ikut terbawa
-
-![Soal 13 - alpha](images/13/13-alpha-redirect.png)
-
----
 
 ## Soal 14
 ### Log IP Asli Client
@@ -872,44 +824,6 @@ grep 'demo=14-' /var/log/nginx/core-access.log | tail -n 16
 
 **Target hasil:** Pada log, client dari Alpha harus 192.217.4.2 dan dari Delta 192.217.5.2. Peer tetap IP proxy: Penny untuk vault, Abbey untuk core. Host harus WWW atau static sesuai jalur akses.
 
-#### Screenshot yang harus diambil
-
-| No | File | Node | Perintah | Yang harus terlihat |
-|---|---|---|---|---|
-| 1 | `images/14/14-alpha-trafik.png` | alpha | loop curl `?demo=14-alpha-N` | perintah selesai tanpa error (menghasilkan jejak di log) |
-| 2 | `images/14/14-delta-trafik.png` | delta | loop curl `?demo=14-delta-N` | perintah selesai tanpa error |
-| 3 | `images/14/14-obladi-log.png` | obladi | `grep demo=14- ... vault-access.log` | `client=192.217.4.2` dan `192.217.5.2`, `peer=192.217.3.2` |
-| 4 | `images/14/14-desmond-log.png` | desmond | sama seperti obladi | `client=` IP asli alpha/delta, bukan IP penny |
-| 5 | `images/14/14-oblada-log.png` | oblada | `grep demo=14- ... core-access.log` | `client=192.217.4.2` dan `192.217.5.2`, `peer=192.217.2.2` |
-| 6 | `images/14/14-molly-log.png` | molly | sama seperti oblada | `client=` IP asli alpha/delta, bukan IP abbey |
-
-#### Hasil
-
-**alpha** - perintah selesai tanpa error (menghasilkan jejak di log)
-
-![Soal 14 - alpha](images/14/14-alpha-trafik.png)
-
-**delta** - perintah selesai tanpa error
-
-![Soal 14 - delta](images/14/14-delta-trafik.png)
-
-**obladi** - `client=192.217.4.2` dan `192.217.5.2`, `peer=192.217.3.2`
-
-![Soal 14 - obladi](images/14/14-obladi-log.png)
-
-**desmond** - `client=` IP asli alpha/delta, bukan IP penny
-
-![Soal 14 - desmond](images/14/14-desmond-log.png)
-
-**oblada** - `client=192.217.4.2` dan `192.217.5.2`, `peer=192.217.2.2`
-
-![Soal 14 - oblada](images/14/14-oblada-log.png)
-
-**molly** - `client=` IP asli alpha/delta, bukan IP abbey
-
-![Soal 14 - molly](images/14/14-molly-log.png)
-
----
 
 ## Soal 15
 ### Jalur /eternal (PHP) di Penny dan /orion (Statis) di Abbey
@@ -963,29 +877,7 @@ grep -n -A 12 'location /orion/' /etc/nginx/sites-available/abbey.conf
 
 **Target hasil:** Eternal menampilkan hasil perhitungan PHP 5; Orion menampilkan HTML statis. Konfigurasi Orion menolak permintaan .php dengan 403.
 
-#### Screenshot yang harus diambil
 
-| No | File | Node | Perintah | Yang harus terlihat |
-|---|---|---|---|---|
-| 1 | `images/15/15-alpha-eternal-orion.png` | alpha | blok check Alpha | `/eternal/` menampilkan "Hasil perhitungan PHP: 5"; `/orion/` menampilkan HTML statis; `orion/contoh.php` 403 |
-| 2 | `images/15/15-penny-config.png` | penny | blok check Penny | port 8080 listen, isi `/var/www/eternal`, konfigurasi `eternal` |
-| 3 | `images/15/15-abbey-config.png` | abbey | blok check Abbey | isi `/var/www/orion` dan blok `location /orion/` |
-
-#### Hasil
-
-**alpha** - `/eternal/` menampilkan "Hasil perhitungan PHP: 5"; `/orion/` menampilkan HTML statis; `orion/contoh.php` 403
-
-![Soal 15 - alpha](images/15/15-alpha-eternal-orion.png)
-
-**penny** - port 8080 listen, isi `/var/www/eternal`, konfigurasi `eternal`
-
-![Soal 15 - penny](images/15/15-penny-config.png)
-
-**abbey** - isi `/var/www/orion` dan blok `location /orion/`
-
-![Soal 15 - abbey](images/15/15-abbey-config.png)
-
----
 
 ## Soal 16
 ### Stress Test ApacheBench (250 request, concurrency 10)
@@ -1037,29 +929,7 @@ done
 
 **Target hasil:** Concurrency Level 10, Complete requests 250, Failed requests 0, tanpa respons non-2xx. -l mengizinkan panjang body berbeda antarbackend. Angka waktu/throughput diambil dari output aktual.
 
-#### Screenshot yang harus diambil
 
-| No | File | Node | Perintah | Yang harus terlihat |
-|---|---|---|---|---|
-| 1 | `images/16/16-ab-www.png` | alpha | `ab -l -n 250 -c 10 http://www.k12.com/` | Concurrency Level 10, Complete requests 250, Failed requests 0 |
-| 2 | `images/16/16-ab-static.png` | alpha | `ab -l -n 250 -c 10 http://static.k12.com/` | Concurrency Level 10, Complete requests 250, Failed requests 0 |
-| 3 | `images/16/16-ringkasan.png` | alpha | blok ringkasan `grep` | ringkasan kedua layanan berdampingan |
-
-#### Hasil
-
-**alpha** - Concurrency Level 10, Complete requests 250, Failed requests 0
-
-![Soal 16 - alpha](images/16/16-ab-www.png)
-
-**alpha** - Concurrency Level 10, Complete requests 250, Failed requests 0
-
-![Soal 16 - alpha](images/16/16-ab-static.png)
-
-**alpha** - ringkasan kedua layanan berdampingan
-
-![Soal 16 - alpha](images/16/16-ringkasan.png)
-
----
 
 ## Soal 17
 ### TXT Record Klien
@@ -1095,24 +965,7 @@ done
 
 **Target hasil:** TXT domain alpha, beta, gamma, delta, epsilon berisi nama masing-masing. Perubahan zona menaikkan serial dan mengirim notify ke Tedd.
 
-#### Screenshot yang harus diambil
 
-| No | File | Node | Perintah | Yang harus terlihat |
-|---|---|---|---|---|
-| 1 | `images/17/17-prab-jalankan.png` | prab | `python3 /root/dns-edit.py txt` | pesan "Aksi txt selesai, serial baru ..." dan `OK` dari named-checkzone |
-| 2 | `images/17/17-alpha-txt.png` | alpha | blok check nomor 17 | TXT alpha/beta/gamma/delta/epsilon berisi namanya, dari kedua DNS |
-
-#### Hasil
-
-**prab** - pesan "Aksi txt selesai, serial baru ..." dan `OK` dari named-checkzone
-
-![Soal 17 - prab](images/17/17-prab-jalankan.png)
-
-**alpha** - TXT alpha/beta/gamma/delta/epsilon berisi namanya, dari kedua DNS
-
-![Soal 17 - alpha](images/17/17-alpha-txt.png)
-
----
 
 ## Soal 18
 ### TTL 15 Detik dan Perubahan IP Fiktif Abbey
@@ -1195,54 +1048,7 @@ mkdir -p /root/bukti-demo
 
 **Target hasil:** TTL dihitung sejak cache diisi. Query langsung ke authoritative tidak menunjukkan fase cache lama. Setelah pengujian, Prab/Tedd harus kembali menjawab 192.217.2.2 dan static kembali HTTP 200.
 
-#### Screenshot yang harus diambil
 
-| No | File | Node | Perintah | Yang harus terlihat |
-|---|---|---|---|---|
-| 1 | `images/18/18-prab-ttl15.png` | prab | `python3 /root/dns-edit.py ttl15` + dig | abbey TTL 15 dengan IP 192.217.2.2; serial SOA prab = tedd |
-| 2 | `images/18/18-alpha-watch-fase1.png` | alpha | `bash /root/18-cache.sh watch` | FASE 1: sebelum perubahan, cache dan prab sama-sama 192.217.2.2 |
-| 3 | `images/18/18-prab-fake.png` | prab | `python3 /root/dns-edit.py fake` (saat watch berjalan) | pesan "Aksi fake selesai, serial baru ..." beserta waktu eksekusi |
-| 4 | `images/18/18-alpha-watch-fase2.png` | alpha | lanjutan output watch | FASE 2: cache alpha masih 192.217.2.2 (TTL menurun) sementara prab sudah 203.0.113.77 |
-| 5 | `images/18/18-alpha-watch-fase3.png` | alpha | lanjutan output watch | FASE 3: cache alpha berubah menjadi 203.0.113.77 setelah TTL habis |
-| 6 | `images/18/18-alpha-tedd-sinkron.png` | alpha | blok "Console Alpha - setelah pengamatan selesai" | serial SOA prab = tedd, tedd menjawab abbey = 203.0.113.77 dengan flag `aa` |
-| 7 | `images/18/18-prab-restore.png` | prab | `python3 /root/dns-edit.py restore` | abbey kembali ke 192.217.2.2, serial prab = tedd |
-| 8 | `images/18/18-alpha-pemulihan.png` | alpha | blok check pemulihan | prab dan tedd menjawab 192.217.2.2, `static.k12.com` HTTP 200 |
-
-#### Hasil
-
-**prab** - abbey TTL 15 dengan IP 192.217.2.2; serial SOA prab = tedd
-
-![Soal 18 - prab](images/18/18-prab-ttl15.png)
-
-**alpha** - FASE 1: sebelum perubahan, cache dan prab sama-sama 192.217.2.2
-
-![Soal 18 - alpha](images/18/18-alpha-watch-fase1.png)
-
-**prab** - pesan "Aksi fake selesai, serial baru ..." beserta waktu eksekusi
-
-![Soal 18 - prab](images/18/18-prab-fake.png)
-
-**alpha** - FASE 2: cache alpha masih 192.217.2.2 (TTL menurun) sementara prab sudah 203.0.113.77
-
-![Soal 18 - alpha](images/18/18-alpha-watch-fase2.png)
-
-**alpha** - FASE 3: cache alpha berubah menjadi 203.0.113.77 setelah TTL habis
-
-![Soal 18 - alpha](images/18/18-alpha-watch-fase3.png)
-
-**alpha** - serial SOA prab = tedd, tedd menjawab abbey = 203.0.113.77 dengan flag `aa`
-
-![Soal 18 - alpha](images/18/18-alpha-tedd-sinkron.png)
-
-**prab** - abbey kembali ke 192.217.2.2, serial prab = tedd
-
-![Soal 18 - prab](images/18/18-prab-restore.png)
-
-**alpha** - prab dan tedd menjawab 192.217.2.2, `static.k12.com` HTTP 200
-
-![Soal 18 - alpha](images/18/18-alpha-pemulihan.png)
-
----
 
 ## Soal 19
 ### CNAME Eksternal outbound.k12.com ke http.badssl.com
@@ -1301,24 +1107,7 @@ K12_OUTBOUND
 
 **Target hasil:** Target DNS: outbound.k12.com CNAME ke http.badssl.com. CNAME tidak mengganti HTTP Host; perbandingan konten memakai Host: http.badssl.com secara eksplisit. Kedua body harus sama sesuai hasil cmp.
 
-#### Screenshot yang harus diambil
 
-| No | File | Node | Perintah | Yang harus terlihat |
-|---|---|---|---|---|
-| 1 | `images/19/19-alpha-dig-curl.png` | alpha | blok check pertama | CNAME dari prab dan tedd = `http.badssl.com.`, `curl` mengembalikan konten HTTP |
-| 2 | `images/19/19-alpha-perbandingan.png` | alpha | blok perbandingan (`cmp`) | tulisan `BODY KEDUA RESPONS SAMA.` dan cuplikan HTML `http.badssl.com` |
-
-#### Hasil
-
-**alpha** - CNAME dari prab dan tedd = `http.badssl.com.`, `curl` mengembalikan konten HTTP
-
-![Soal 19 - alpha](images/19/19-alpha-dig-curl.png)
-
-**alpha** - tulisan `BODY KEDUA RESPONS SAMA.` dan cuplikan HTML `http.badssl.com`
-
-![Soal 19 - alpha](images/19/19-alpha-perbandingan.png)
-
----
 
 ## Soal 20
 ### Autostart dan Pengecekan Setelah Restart
@@ -1449,48 +1238,5 @@ curl --noproxy '*' --max-time 10 -sS -I http://abbey.k12.com/
 
 **Target hasil:** BOOT OK memiliki waktu sesudah restart, proses/port aktif, NAT dan DNS normal, URL normal 200, admin 401/200 sesuai kredensial, redirect 301/302. Ulangi check nomor 11 dan 14 untuk distribusi dan log setelah restart.
 
-#### Screenshot yang harus diambil
-
-| No | File | Node | Perintah | Yang harus terlihat |
-|---|---|---|---|---|
-| 1 | `images/20/20-gns3-start-command.png` | GNS3 | pengaturan node | kolom Start command terisi (minimal 1 node sebagai contoh) |
-| 2 | `images/20/20-sebelum-restart.png` | salah satu node (idealnya semua 14) | blok check sebelum restart | `boot.sh`, `lab-role`, `config.tar.gz` ada |
-| 3 | `images/20/20-gns3-stop-start.png` | GNS3 | Stop lalu Start semua node | status node berjalan kembali (hijau) |
-| 4 | `images/20/20-setelah-restart-rootkit.png` | rootkit | blok check setelah restart + blok rootkit | `BOOT OK: rootkit`, ip_forward 1, MASQUERADE, FORWARD |
-| 5 | `images/20/20-setelah-restart-prab-tedd.png` | prab dan tedd | blok DNS | `BOOT OK`, `named` berjalan, `rndc status`, port 53 listen |
-| 6 | `images/20/20-setelah-restart-web.png` | penny, obladi, desmond, abbey, oblada, molly | blok apache/nginx/php | `BOOT OK`, proses apache/nginx/php-fpm berjalan, port 80 listen |
-| 7 | `images/20/20-setelah-restart-alpha.png` | alpha | blok check Alpha setelah semua node start | ping 1.1.1.1, SOA sama, abbey normal, PTR, TXT, CNAME, seluruh URL 200, admin 401/200, redirect 301/302 |
-
-#### Hasil
-
-**GNS3** - kolom Start command terisi (minimal 1 node sebagai contoh)
-
-![Soal 20 - GNS3](images/20/20-gns3-start-command.png)
-
-**salah satu node (idealnya semua 14)** - `boot.sh`, `lab-role`, `config.tar.gz` ada
-
-![Soal 20 - salah satu node (idealnya semua 14)](images/20/20-sebelum-restart.png)
-
-**GNS3** - status node berjalan kembali (hijau)
-
-![Soal 20 - GNS3](images/20/20-gns3-stop-start.png)
-
-**rootkit** - `BOOT OK: rootkit`, ip_forward 1, MASQUERADE, FORWARD
-
-![Soal 20 - rootkit](images/20/20-setelah-restart-rootkit.png)
-
-**prab dan tedd** - `BOOT OK`, `named` berjalan, `rndc status`, port 53 listen
-
-![Soal 20 - prab dan tedd](images/20/20-setelah-restart-prab-tedd.png)
-
-**penny, obladi, desmond, abbey, oblada, molly** - `BOOT OK`, proses apache/nginx/php-fpm berjalan, port 80 listen
-
-![Soal 20 - penny, obladi, desmond, abbey, oblada, molly](images/20/20-setelah-restart-web.png)
-
-**alpha** - ping 1.1.1.1, SOA sama, abbey normal, PTR, TXT, CNAME, seluruh URL 200, admin 401/200, redirect 301/302
-
-![Soal 20 - alpha](images/20/20-setelah-restart-alpha.png)
-
----
 
 
