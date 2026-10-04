@@ -427,6 +427,10 @@ done
 
 **Target hasil:** Hostname sistem harus sesuai nama node, dan dig harus menghasilkan IP pada tabel nomor 1. getent dapat membaca /etc/hosts; dig membuktikan data DNS.
 
+<img width="2940" height="1912" alt="Gambar 04-10-26 di 23 57" src="https://github.com/user-attachments/assets/8de17e73-5b86-47bf-ac42-7ffc6cf74f43" />
+
+<img width="2940" height="1912" alt="Gambar 04-10-26 di 23 58" src="https://github.com/user-attachments/assets/99f14248-9f55-415c-a7de-d8d1acbf8414" />
+
 
 
 ## Soal 6
