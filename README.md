@@ -321,7 +321,6 @@ bash /root/03-resolver-awal.sh
 **ALPHA, LALU ULANGI DI DELTA DAN HOST LAIN UNTUK BUKTI LENGKAP.**
 
 ```bash
-# PASTE DI ALPHA, LALU ULANGI DI DELTA DAN HOST LAIN UNTUK BUKTI LENGKAP
 hostname
 for ip in 192.217.1.1 192.217.1.2 192.217.1.3 192.217.1.4 192.217.1.5 192.217.1.6 192.217.1.7 192.217.2.2 192.217.3.2 192.217.4.2 192.217.4.3 192.217.4.4 192.217.5.2 192.217.5.3; do
     printf '\nTujuan %s\n' "$ip"
@@ -403,22 +402,15 @@ done
 - [`script/01-network.sh`](script/01-network.sh) - Menulis `/etc/hostname` dan entri `/etc/hosts`.
 - [`script/04-dns.sh`](script/04-dns.sh) - Membuat A record seluruh node di zona `k12.com`.
 
-**Cara menjalankan:**
 
-Tidak ada langkah tambahan:
-
-```bash
-# sudah dibuat oleh 01-network.sh (nomor 1) dan 04-dns.sh (nomor 4)
-```
 
 **Penjelasan:** Hostname dibuat oleh `01-network.sh` (menulis `/etc/hostname`, menjalankan `hostname`, dan menambahkan `127.0.1.1 <node>.k12.com <node>` ke `/etc/hosts`). A record `rootkit` hingga `epsilon` ditulis oleh `04-dns.sh`; record prab dan tedd hanya ditulis sekali.
 
-#### Verifikasi (jalankan lalu screenshot)
+
 
 **SEMUA 14 NODE, SATU PER SATU.**
 
 ```bash
-# PASTE DI SEMUA 14 NODE, SATU PER SATU
 hostname
 cat /etc/hostname
 getent hosts "$(hostname -s)"
@@ -427,7 +419,6 @@ getent hosts "$(hostname -s)"
 **CONSOLE ALPHA.**
 
 ```bash
-# PASTE DI CONSOLE ALPHA
 for host in rootkit alpha beta gamma delta epsilon prab tedd abbey penny obladi desmond oblada molly; do
     printf '\n%s.k12.com\n' "$host"
     dig @192.217.1.2 "$host.k12.com" A +short
@@ -436,89 +427,7 @@ done
 
 **Target hasil:** Hostname sistem harus sesuai nama node, dan dig harus menghasilkan IP pada tabel nomor 1. getent dapat membaca /etc/hosts; dig membuktikan data DNS.
 
-#### Screenshot yang harus diambil
 
-| No | File | Node | Perintah | Yang harus terlihat |
-|---|---|---|---|---|
-| 1 | `images/05/05-rootkit.png` | rootkit | blok check hostname | hostname, isi `/etc/hostname`, dan `getent hosts` sesuai nama node |
-| 2 | `images/05/05-alpha.png` | alpha | blok check hostname | hostname, isi `/etc/hostname`, dan `getent hosts` sesuai nama node |
-| 3 | `images/05/05-beta.png` | beta | blok check hostname | hostname, isi `/etc/hostname`, dan `getent hosts` sesuai nama node |
-| 4 | `images/05/05-gamma.png` | gamma | blok check hostname | hostname, isi `/etc/hostname`, dan `getent hosts` sesuai nama node |
-| 5 | `images/05/05-delta.png` | delta | blok check hostname | hostname, isi `/etc/hostname`, dan `getent hosts` sesuai nama node |
-| 6 | `images/05/05-epsilon.png` | epsilon | blok check hostname | hostname, isi `/etc/hostname`, dan `getent hosts` sesuai nama node |
-| 7 | `images/05/05-prab.png` | prab | blok check hostname | hostname, isi `/etc/hostname`, dan `getent hosts` sesuai nama node |
-| 8 | `images/05/05-tedd.png` | tedd | blok check hostname | hostname, isi `/etc/hostname`, dan `getent hosts` sesuai nama node |
-| 9 | `images/05/05-abbey.png` | abbey | blok check hostname | hostname, isi `/etc/hostname`, dan `getent hosts` sesuai nama node |
-| 10 | `images/05/05-penny.png` | penny | blok check hostname | hostname, isi `/etc/hostname`, dan `getent hosts` sesuai nama node |
-| 11 | `images/05/05-obladi.png` | obladi | blok check hostname | hostname, isi `/etc/hostname`, dan `getent hosts` sesuai nama node |
-| 12 | `images/05/05-desmond.png` | desmond | blok check hostname | hostname, isi `/etc/hostname`, dan `getent hosts` sesuai nama node |
-| 13 | `images/05/05-oblada.png` | oblada | blok check hostname | hostname, isi `/etc/hostname`, dan `getent hosts` sesuai nama node |
-| 14 | `images/05/05-molly.png` | molly | blok check hostname | hostname, isi `/etc/hostname`, dan `getent hosts` sesuai nama node |
-| 15 | `images/05/05-alpha-dig-semua.png` | alpha | loop `dig` 14 hostname | setiap `<host>.k12.com` mengembalikan IP sesuai tabel nomor 1 |
-
-#### Hasil
-
-**rootkit** - hostname, isi `/etc/hostname`, dan `getent hosts` sesuai nama node
-
-![Soal 5 - rootkit](images/05/05-rootkit.png)
-
-**alpha** - hostname, isi `/etc/hostname`, dan `getent hosts` sesuai nama node
-
-![Soal 5 - alpha](images/05/05-alpha.png)
-
-**beta** - hostname, isi `/etc/hostname`, dan `getent hosts` sesuai nama node
-
-![Soal 5 - beta](images/05/05-beta.png)
-
-**gamma** - hostname, isi `/etc/hostname`, dan `getent hosts` sesuai nama node
-
-![Soal 5 - gamma](images/05/05-gamma.png)
-
-**delta** - hostname, isi `/etc/hostname`, dan `getent hosts` sesuai nama node
-
-![Soal 5 - delta](images/05/05-delta.png)
-
-**epsilon** - hostname, isi `/etc/hostname`, dan `getent hosts` sesuai nama node
-
-![Soal 5 - epsilon](images/05/05-epsilon.png)
-
-**prab** - hostname, isi `/etc/hostname`, dan `getent hosts` sesuai nama node
-
-![Soal 5 - prab](images/05/05-prab.png)
-
-**tedd** - hostname, isi `/etc/hostname`, dan `getent hosts` sesuai nama node
-
-![Soal 5 - tedd](images/05/05-tedd.png)
-
-**abbey** - hostname, isi `/etc/hostname`, dan `getent hosts` sesuai nama node
-
-![Soal 5 - abbey](images/05/05-abbey.png)
-
-**penny** - hostname, isi `/etc/hostname`, dan `getent hosts` sesuai nama node
-
-![Soal 5 - penny](images/05/05-penny.png)
-
-**obladi** - hostname, isi `/etc/hostname`, dan `getent hosts` sesuai nama node
-
-![Soal 5 - obladi](images/05/05-obladi.png)
-
-**desmond** - hostname, isi `/etc/hostname`, dan `getent hosts` sesuai nama node
-
-![Soal 5 - desmond](images/05/05-desmond.png)
-
-**oblada** - hostname, isi `/etc/hostname`, dan `getent hosts` sesuai nama node
-
-![Soal 5 - oblada](images/05/05-oblada.png)
-
-**molly** - hostname, isi `/etc/hostname`, dan `getent hosts` sesuai nama node
-
-![Soal 5 - molly](images/05/05-molly.png)
-
-**alpha** - setiap `<host>.k12.com` mengembalikan IP sesuai tabel nomor 1
-
-![Soal 5 - alpha](images/05/05-alpha-dig-semua.png)
-
----
 
 ## Soal 6
 ### Zone Transfer dan Serial SOA
@@ -529,13 +438,6 @@ done
 
 - [`script/04-dns.sh`](script/04-dns.sh) - Konfigurasi notify/allow-transfer di prab dan slave di tedd; `rndc retransfer` pada tedd.
 
-**Cara menjalankan:**
-
-Tidak ada langkah tambahan:
-
-```bash
-# konfigurasi transfer sudah dibuat pada nomor 4
-```
 
 **Penjelasan:** Prab mengirim `NOTIFY` ke tedd dan mengizinkan transfer hanya untuk `192.217.1.3`. Tedd menarik zona via AXFR dari `192.217.1.2` dan menyimpannya di `/var/cache/bind`. Kesamaan serial SOA dan flag `aa` membuktikan zona tersinkron.
 
@@ -544,7 +446,6 @@ Tidak ada langkah tambahan:
 **CONSOLE ALPHA.**
 
 ```bash
-# PASTE DI CONSOLE ALPHA
 echo 'SOA PRAB:'
 dig @192.217.1.2 k12.com SOA +short
 echo 'SOA TEDD:'
@@ -556,31 +457,12 @@ dig @192.217.1.3 k12.com A +norecurse +noall +comments +answer
 **CONSOLE TEDD.**
 
 ```bash
-# PASTE DI CONSOLE TEDD
 hostname
 dig @192.217.1.2 k12.com AXFR
 ```
 
 **Target hasil:** serial SOA Prab dan Tedd sama, AXFR dari Tedd berhasil, dan Tedd menjawab authoritative dengan flag aa.
 
-#### Screenshot yang harus diambil
-
-| No | File | Node | Perintah | Yang harus terlihat |
-|---|---|---|---|---|
-| 1 | `images/06/06-alpha-soa-sama.png` | alpha | blok check Alpha | serial SOA prab = serial SOA tedd; jawaban tedd memuat flag `aa` |
-| 2 | `images/06/06-tedd-axfr.png` | tedd | `dig @192.217.1.2 k12.com AXFR` | daftar record lengkap dan transfer sukses (diawali dan diakhiri SOA) |
-
-#### Hasil
-
-**alpha** - serial SOA prab = serial SOA tedd; jawaban tedd memuat flag `aa`
-
-![Soal 6 - alpha](images/06/06-alpha-soa-sama.png)
-
-**tedd** - daftar record lengkap dan transfer sukses (diawali dan diakhiri SOA)
-
-![Soal 6 - tedd](images/06/06-tedd-axfr.png)
-
----
 
 ## Soal 7
 ### Record vault, core, dan CNAME
@@ -591,22 +473,13 @@ dig @192.217.1.2 k12.com AXFR
 
 - [`script/04-dns.sh`](script/04-dns.sh) - Menambah record `vault`, `core`, `www`, `static` pada zona `k12.com`.
 
-**Cara menjalankan:**
-
-Tidak ada langkah tambahan:
-
-```bash
-# sudah dibuat oleh 04-dns.sh
-```
 
 **Penjelasan:** `vault` memiliki dua A record (`192.217.1.4`, `192.217.1.5`) dan `core` dua A record (`192.217.1.6`, `192.217.1.7`) sehingga DNS round-robin. `www` adalah CNAME ke `penny.k12.com.` dan `static` CNAME ke `abbey.k12.com.`.
 
-#### Verifikasi (jalankan lalu screenshot)
 
 **CONSOLE ALPHA, LALU ULANGI DI DELTA.**
 
 ```bash
-# PASTE DI CONSOLE ALPHA, LALU ULANGI DI DELTA
 hostname
 dig vault.k12.com A +noall +answer
 dig core.k12.com A +noall +answer
@@ -618,24 +491,6 @@ dig static.k12.com A +noall +answer
 
 **Target hasil:** Alpha dan Delta harus memperoleh kumpulan alamat yang sama. Urutan dua A record boleh bertukar. WWW berakhir pada IP Penny; static pada IP Abbey.
 
-#### Screenshot yang harus diambil
-
-| No | File | Node | Perintah | Yang harus terlihat |
-|---|---|---|---|---|
-| 1 | `images/07/07-alpha-dig.png` | alpha | blok check nomor 7 | vault 2 IP, core 2 IP, www -> penny (192.217.3.2), static -> abbey (192.217.2.2) |
-| 2 | `images/07/07-delta-dig.png` | delta | blok check nomor 7 | hasil sama dengan alpha (konsisten) |
-
-#### Hasil
-
-**alpha** - vault 2 IP, core 2 IP, www -> penny (192.217.3.2), static -> abbey (192.217.2.2)
-
-![Soal 7 - alpha](images/07/07-alpha-dig.png)
-
-**delta** - hasil sama dengan alpha (konsisten)
-
-![Soal 7 - delta](images/07/07-delta-dig.png)
-
----
 
 ## Soal 8
 ### Reverse DNS (PTR)
@@ -646,22 +501,13 @@ dig static.k12.com A +noall +answer
 
 - [`script/04-dns.sh`](script/04-dns.sh) - Membuat reverse zone `1.217.192`, `2.217.192`, `3.217.192` beserta PTR.
 
-**Cara menjalankan:**
-
-Tidak ada langkah tambahan:
-
-```bash
-# sudah dibuat oleh 04-dns.sh
-```
 
 **Penjelasan:** Tiga reverse zone dibuat: `1.217.192.in-addr.arpa` (rootkit, prab, tedd, obladi, desmond, oblada, molly), `2.217.192.in-addr.arpa` (abbey), dan `3.217.192.in-addr.arpa` (penny). Tedd menarik ketiganya sebagai slave.
 
-#### Verifikasi (jalankan lalu screenshot)
 
 **CONSOLE ALPHA.**
 
 ```bash
-# PASTE DI CONSOLE ALPHA
 for dns in 192.217.1.2 192.217.1.3; do
     for ip in 192.217.2.2 192.217.3.2 192.217.1.4 192.217.1.5 192.217.1.6 192.217.1.7; do
         printf '\nDNS %s, reverse %s\n' "$dns" "$ip"
@@ -672,12 +518,6 @@ done
 
 **Target hasil:** reverse IP Abbey, Penny, Obladi, Desmond, Oblada, dan Molly menghasilkan hostname yang sesuai, dengan flag aa pada kedua DNS.
 
-#### Screenshot yang harus diambil
-
-| No | File | Node | Perintah | Yang harus terlihat |
-|---|---|---|---|---|
-| 1 | `images/08/08-alpha-reverse-1.png` | alpha | blok check nomor 8 (bagian atas) | DNS 192.217.1.2: PTR abbey, penny, obladi, desmond, oblada, molly + flag `aa` |
-| 2 | `images/08/08-alpha-reverse-2.png` | alpha | blok check nomor 8 (bagian bawah) | DNS 192.217.1.3: PTR yang sama + flag `aa` |
 
 #### Hasil
 
@@ -715,7 +555,6 @@ bash /root/09-vault.sh
 **CONSOLE ALPHA.**
 
 ```bash
-# PASTE DI CONSOLE ALPHA
 curl --noproxy '*' --max-time 10 -sS -i http://obladi.k12.com/arsip/
 curl --noproxy '*' --max-time 10 -sS -i http://desmond.k12.com/arsip/
 ```
@@ -723,7 +562,6 @@ curl --noproxy '*' --max-time 10 -sS -i http://desmond.k12.com/arsip/
 **CONSOLE OBLADI, LALU ULANGI DI DESMOND.**
 
 ```bash
-# PASTE DI CONSOLE OBLADI, LALU ULANGI DI DESMOND
 hostname
 apache2ctl configtest
 cat /etc/apache2/sites-available/arsip.conf
@@ -731,14 +569,6 @@ ls -l /arsip
 ```
 
 **Target hasil:** akses /arsip/ melalui hostname menghasilkan HTTP 200 dan daftar file. Autoindex diaktifkan pada kedua backend vault.
-
-#### Screenshot yang harus diambil
-
-| No | File | Node | Perintah | Yang harus terlihat |
-|---|---|---|---|---|
-| 1 | `images/09/09-alpha-curl-arsip.png` | alpha | `curl -i http://obladi.k12.com/arsip/` dan desmond | HTTP 200 dan HTML "Index of /arsip" dengan contoh1.txt, contoh2.txt |
-| 2 | `images/09/09-obladi-config.png` | obladi | blok check Obladi | `Syntax OK`, isi `arsip.conf`, `ls -l /arsip` |
-| 3 | `images/09/09-desmond-config.png` | desmond | blok check Desmond | `Syntax OK`, isi `arsip.conf`, `ls -l /arsip` |
 
 #### Hasil
 
@@ -775,12 +605,11 @@ bash /root/10-core.sh
 
 **Penjelasan:** Aplikasi berada di `/var/www/core`. Blok `location = /profil { rewrite ^ /profil.php last; }` membuat URL bersih `/profil`. PHP dieksekusi lewat `fastcgi_pass unix:/run/php/php8.4-fpm.sock`.
 
-#### Verifikasi (jalankan lalu screenshot)
+
 
 **CONSOLE ALPHA.**
 
 ```bash
-# PASTE DI CONSOLE ALPHA
 for host in oblada molly; do
     printf '\nBERANDA %s\n' "$host"
     curl --noproxy '*' --max-time 10 -sS -i "http://$host.k12.com/"
@@ -792,7 +621,6 @@ done
 **CONSOLE OBLADA, LALU ULANGI DI MOLLY.**
 
 ```bash
-# PASTE DI CONSOLE OBLADA, LALU ULANGI DI MOLLY
 hostname
 nginx -t
 php-fpm8.4 -t
@@ -800,15 +628,6 @@ cat /etc/nginx/sites-available/core.conf
 ```
 
 **Target hasil:** beranda dan /profil menghasilkan HTTP 200 serta HTML hasil eksekusi PHP. Rewrite last meneruskan /profil ke handler /profil.php.
-
-#### Screenshot yang harus diambil
-
-| No | File | Node | Perintah | Yang harus terlihat |
-|---|---|---|---|---|
-| 1 | `images/10/10-alpha-oblada.png` | alpha | curl beranda dan /profil `oblada.k12.com` | HTTP 200, HTML beranda dan profil hasil eksekusi PHP |
-| 2 | `images/10/10-alpha-molly.png` | alpha | curl beranda dan /profil `molly.k12.com` | HTTP 200, HTML beranda dan profil |
-| 3 | `images/10/10-oblada-config.png` | oblada | blok check Oblada | `nginx -t` ok, `php-fpm8.4 -t` ok, isi `core.conf` (ada rewrite) |
-| 4 | `images/10/10-molly-config.png` | molly | blok check Molly | `nginx -t` ok, `php-fpm8.4 -t` ok, isi `core.conf` |
 
 #### Hasil
 
@@ -856,12 +675,10 @@ bash /root/11-abbey.sh
 
 **Penjelasan:** Penny memakai `balancer://vault` (metode `byrequests`) ke `192.217.1.4` dan `192.217.1.5`, `ProxyPreserveHost On` meneruskan Host, dan `RequestHeader set X-Real-IP` meneruskan IP client. Abbey memakai `upstream core_backend` ke `192.217.1.6` dan `192.217.1.7`, dengan `proxy_set_header Host $http_host` dan `X-Real-IP $remote_addr`. Header `X-Backend` pada backend menunjukkan node yang menjawab.
 
-#### Verifikasi (jalankan lalu screenshot)
 
 **CONSOLE ALPHA.**
 
 ```bash
-# PASTE DI CONSOLE ALPHA
 for host in www.k12.com static.k12.com; do
     printf '\n=== %s ===\n' "$host"
     for i in $(seq 1 10); do
@@ -875,7 +692,6 @@ done
 **CONSOLE PENNY.**
 
 ```bash
-# PASTE DI CONSOLE PENNY
 hostname
 apache2ctl configtest
 grep -nE 'ProxyPreserveHost|X-Real-IP|BalancerMember|lbmethod' /etc/apache2/sites-available/penny.conf
@@ -884,7 +700,6 @@ grep -nE 'ProxyPreserveHost|X-Real-IP|BalancerMember|lbmethod' /etc/apache2/site
 **CONSOLE ABBEY.**
 
 ```bash
-# PASTE DI CONSOLE ABBEY
 hostname
 nginx -t
 grep -nE 'upstream|server 192|proxy_pass|proxy_set_header' /etc/nginx/sites-available/abbey.conf
@@ -925,22 +740,13 @@ grep -nE 'upstream|server 192|proxy_pass|proxy_set_header' /etc/nginx/sites-avai
 
 - [`script/11-penny.sh`](script/11-penny.sh) - Membuat `.htpasswd` untuk user `prabs` dan blok `LocationMatch ^/admin`.
 
-**Cara menjalankan:**
-
-Sudah termasuk 11-penny.sh:
-
-```bash
-# tidak ada langkah tambahan
-```
 
 **Penjelasan:** Password disimpan dalam `/etc/apache2/.htpasswd` (bcrypt, `htpasswd -iBc`). Tiga tanda `*` pada password adalah karakter literal. `ProxyPass "/admin" "!"` mengecualikan path admin dari proxy sehingga dilayani langsung dari `/var/www/admin`.
 
-#### Verifikasi (jalankan lalu screenshot)
 
 **CONSOLE ALPHA.**
 
 ```bash
-# PASTE DI CONSOLE ALPHA
 echo 'TANPA KREDENSIAL:'
 curl --noproxy '*' --max-time 10 -sS -D - -o /dev/null http://www.k12.com/admin/
 echo 'PASSWORD SALAH:'
@@ -981,18 +787,13 @@ curl --noproxy '*' --max-time 10 -sS -D - -o /dev/null http://www.k12.com/admin
 
 Sudah termasuk 11-penny.sh dan 11-abbey.sh:
 
-```bash
-# tidak ada langkah tambahan
-```
 
 **Penjelasan:** Penny: host selain `www.k12.com` di-redirect `301` ke `http://www.k12.com%{REQUEST_URI}` (path dan query dipertahankan). Abbey: server block `default_server` mengembalikan `302` ke `http://static.k12.com$request_uri`.
 
-#### Verifikasi (jalankan lalu screenshot)
 
 **CONSOLE ALPHA.**
 
 ```bash
-# PASTE DI CONSOLE ALPHA
 for url in http://192.217.3.2/ http://penny.k12.com/ http://192.217.2.2/ http://abbey.k12.com/; do
     printf '\nURL %s\n' "$url"
     curl --noproxy '*' --max-time 10 -sS -I "$url"
@@ -1031,18 +832,13 @@ curl --noproxy '*' --max-time 10 -sS -I 'http://abbey.k12.com/profil?cek=1'
 
 Sudah termasuk 09-vault.sh dan 10-core.sh:
 
-```bash
-# tidak ada langkah tambahan
-```
 
 **Penjelasan:** Format log menampilkan `client=` (IP asli setelah modul remoteip/realip) dan `peer=` (IP gerbang). Contoh yang diharapkan: client dari Alpha `192.217.4.2`, dari Delta `192.217.5.2`; peer `192.217.3.2` pada vault dan `192.217.2.2` pada core.
 
-#### Verifikasi (jalankan lalu screenshot)
 
 **CONSOLE ALPHA.**
 
 ```bash
-# PASTE DI CONSOLE ALPHA
 hostname
 for i in $(seq 1 6); do
     curl --noproxy '*' --max-time 10 -sS -o /dev/null "http://www.k12.com/?demo=14-alpha-$i"
@@ -1053,7 +849,6 @@ done
 **CONSOLE DELTA.**
 
 ```bash
-# PASTE DI CONSOLE DELTA
 hostname
 for i in $(seq 1 6); do
     curl --noproxy '*' --max-time 10 -sS -o /dev/null "http://www.k12.com/?demo=14-delta-$i"
@@ -1064,7 +859,6 @@ done
 **CONSOLE OBLADI, LALU ULANGI DI DESMOND.**
 
 ```bash
-# PASTE DI CONSOLE OBLADI, LALU ULANGI DI DESMOND
 hostname
 grep 'demo=14-' /var/log/apache2/vault-access.log | tail -n 16
 ```
@@ -1072,7 +866,6 @@ grep 'demo=14-' /var/log/apache2/vault-access.log | tail -n 16
 **CONSOLE OBLADA, LALU ULANGI DI MOLLY.**
 
 ```bash
-# PASTE DI CONSOLE OBLADA, LALU ULANGI DI MOLLY
 hostname
 grep 'demo=14-' /var/log/nginx/core-access.log | tail -n 16
 ```
@@ -1138,12 +931,10 @@ Sudah termasuk 11-penny.sh dan 11-abbey.sh:
 
 **Penjelasan:** Di Penny, `/eternal/` di-proxy ke VirtualHost internal `127.0.0.1:8080` yang menjalankan PHP lewat `SetHandler "proxy:unix:/run/php/php8.4-fpm.sock|fcgi://localhost/"`. Di Abbey, `/orion/` hanya `alias` ke direktori statis, dan permintaan `.php` dijawab `403`.
 
-#### Verifikasi (jalankan lalu screenshot)
 
 **CONSOLE ALPHA.**
 
 ```bash
-# PASTE DI CONSOLE ALPHA
 echo 'ETERNAL PHP:'
 curl --noproxy '*' --max-time 10 -sS -i http://www.k12.com/eternal/
 curl --noproxy '*' --max-time 10 -sS -i http://www.k12.com/eternal/index.php
@@ -1156,7 +947,6 @@ curl --noproxy '*' --max-time 10 -sS -D - -o /dev/null http://static.k12.com/ori
 **CONSOLE PENNY.**
 
 ```bash
-# PASTE DI CONSOLE PENNY
 hostname
 ss -lntp | grep ':8080'
 ls -l /var/www/eternal
@@ -1166,7 +956,6 @@ grep -nE 'eternal|8080|SetHandler|DocumentRoot' /etc/apache2/sites-available/pen
 **CONSOLE ABBEY.**
 
 ```bash
-# PASTE DI CONSOLE ABBEY
 hostname
 ls -l /var/www/orion
 grep -n -A 12 'location /orion/' /etc/nginx/sites-available/abbey.conf
@@ -1217,12 +1006,10 @@ bash /root/16-benchmark.sh
 
 **Penjelasan:** Opsi `-n 250` = jumlah request, `-c 10` = concurrency, `-l` mengizinkan panjang body berbeda antarbackend. Hasil yang diharapkan: `Complete requests: 250`, `Failed requests: 0`, tanpa `Non-2xx responses`.
 
-#### Verifikasi (jalankan lalu screenshot)
 
 **CONSOLE ALPHA.**
 
 ```bash
-# PASTE DI CONSOLE ALPHA
 bash <<'K12_BENCHMARK'
 set -euo pipefail
 mkdir -p /root/bukti-demo
@@ -1242,7 +1029,6 @@ K12_BENCHMARK
 **CONSOLE ALPHA.**
 
 ```bash
-# PASTE DI CONSOLE ALPHA
 for layanan in www static; do
     printf '\nRINGKASAN %s\n' "$layanan"
     grep -E '^(Concurrency Level|Time taken for tests|Complete requests|Failed requests|Non-2xx responses|Requests per second|Time per request|Transfer rate):' "/root/bukti-demo/16-ab-$layanan.txt"
@@ -1294,12 +1080,10 @@ python3 /root/dns-edit.py txt
 
 **Penjelasan:** Skrip menambah baris `alpha IN TXT "alpha"` dan seterusnya, memvalidasi dengan `named-checkzone`, menaikkan serial SOA, lalu `rndc reload` dan `rndc notify` agar tedd ikut tersinkron.
 
-#### Verifikasi (jalankan lalu screenshot)
 
 **CONSOLE ALPHA.**
 
 ```bash
-# PASTE DI CONSOLE ALPHA
 for dns in 192.217.1.2 192.217.1.3; do
     printf '\nDNS %s\n' "$dns"
     for host in alpha beta gamma delta epsilon; do
@@ -1356,12 +1140,11 @@ python3 /root/dns-edit.py ttl15
 
 **Penjelasan:** Alpha memakai cache lokal agar efek TTL terlihat; query langsung ke prab selalu menunjukkan data terbaru. Urutan demo: (1) jalankan `reset` lalu `watch` di alpha, (2) sekitar detik ke-3 jalankan `fake` di prab, (3) amati cache alpha tetap IP lama dengan TTL menurun lalu berganti ke `203.0.113.77` setelah TTL habis, (4) `restore` di prab. IP `203.0.113.77` adalah alamat yang valid secara format dan tidak dipakai di jaringan lab.
 
-#### Verifikasi (jalankan lalu screenshot)
+
 
 **Console Alpha.** Buka juga console Prab; jalankan perubahan IP pada Prab sekitar detik ke-3 saat pengamatan Alpha berlangsung.
 
 ```bash
-# PASTE DI CONSOLE ALPHA
 bash /root/18-cache.sh reset
 bash /root/18-cache.sh watch
 ```
@@ -1369,14 +1152,12 @@ bash /root/18-cache.sh watch
 **Console Prab - saat pengamatan Alpha masih berjalan.**
 
 ```bash
-# PASTE DI CONSOLE PRAB SAAT WATCH ALPHA MASIH BERJALAN
 python3 /root/dns-edit.py fake
 ```
 
 **Console Alpha - setelah pengamatan selesai.**
 
 ```bash
-# PASTE DI CONSOLE ALPHA
 mkdir -p /root/bukti-demo
 cp /root/bukti/ttl-abbey.txt /root/bukti-demo/18-cache.txt
 {
@@ -1395,7 +1176,6 @@ cp /root/bukti/ttl-abbey.txt /root/bukti-demo/18-cache.txt
 **Pemulihan - console Prab.**
 
 ```bash
-# PASTE DI CONSOLE PRAB
 python3 /root/dns-edit.py restore
 dig @192.217.1.2 k12.com SOA +short
 dig @192.217.1.3 k12.com SOA +short
@@ -1404,7 +1184,6 @@ dig @192.217.1.3 k12.com SOA +short
 **Check pemulihan - console Alpha.**
 
 ```bash
-# PASTE DI CONSOLE ALPHA
 bash /root/18-cache.sh stop
 mkdir -p /root/bukti-demo
 {
@@ -1484,12 +1263,10 @@ python3 /root/dns-edit.py outbound
 
 **Penjelasan:** CNAME hanya mengalihkan resolusi DNS, bukan header HTTP `Host`. Karena itu perbandingan isi konten dilakukan dengan `-H "Host: http.badssl.com"`, lalu `cmp` memastikan body sama dengan akses langsung ke `http://http.badssl.com/`.
 
-#### Verifikasi (jalankan lalu screenshot)
 
 **CONSOLE ALPHA.**
 
 ```bash
-# PASTE DI CONSOLE ALPHA
 dig @192.217.1.2 outbound.k12.com CNAME +short
 dig @192.217.1.3 outbound.k12.com CNAME +short
 dig outbound.k12.com A +noall +comments +answer
@@ -1499,7 +1276,6 @@ curl --noproxy '*' --max-time 20 -sS -i http://outbound.k12.com/
 **CONSOLE ALPHA.**
 
 ```bash
-# PASTE DI CONSOLE ALPHA
 bash <<'K12_OUTBOUND'
 set -euo pipefail
 mkdir -p /root/bukti-demo
@@ -1583,12 +1359,9 @@ GNS3: isi Start command pada setiap node (Configure/Edit node, lalu Stop dan Sta
 
 **Penjelasan:** Container GNS3 dapat kehilangan paket dan konfigurasi di layer non-volume saat stop/start, sementara `/root` bersifat persisten. Karena itu `20-autostart.sh` menyimpan paket `.deb` dan snapshot `/etc` penting ke `/root/lab-state`. Saat node start, `boot.sh` (dijalankan oleh Start command) memasang paket dari cache lokal, memulihkan konfigurasi, menerapkan jaringan, menyalakan service sesuai peran, dan mengatur resolver akhir. Log tersimpan di `/root/lab-boot.log`.
 
-#### Verifikasi (jalankan lalu screenshot)
-
 **Sebelum restart - semua node.**
 
 ```bash
-# PASTE DI SEMUA 14 NODE SEBELUM STOP/START
 date -Is
 hostname
 ls -l /root/boot.sh /root/lab-role /root/lab-state/config.tar.gz
@@ -1600,7 +1373,6 @@ tail -n 5 /root/lab-boot.log 2>/dev/null || true
 **SEMUA 14 NODE SETELAH STOP/START.**
 
 ```bash
-# PASTE DI SEMUA 14 NODE SETELAH STOP/START
 date -Is
 hostname
 ip -br -4 address
@@ -1612,7 +1384,6 @@ tail -n 20 /root/lab-boot.log
 **CONSOLE ROOTKIT.**
 
 ```bash
-# PASTE DI CONSOLE ROOTKIT
 sysctl net.ipv4.ip_forward
 iptables -t nat -S POSTROUTING
 iptables -S FORWARD
@@ -1621,7 +1392,6 @@ iptables -S FORWARD
 **CONSOLE PRAB, LALU ULANGI DI TEDD.**
 
 ```bash
-# PASTE DI CONSOLE PRAB, LALU ULANGI DI TEDD
 hostname
 pgrep -a named
 rndc status
@@ -1631,7 +1401,6 @@ ss -lntup | grep ':53'
 **PENNY, OBLADI, DESMOND, SATU PER SATU.**
 
 ```bash
-# PASTE DI PENNY, OBLADI, DESMOND, SATU PER SATU
 hostname
 apache2ctl configtest
 pgrep -a apache2
@@ -1641,7 +1410,6 @@ ss -lntp | grep ':80'
 **ABBEY, OBLADA, MOLLY, SATU PER SATU.**
 
 ```bash
-# PASTE DI ABBEY, OBLADA, MOLLY, SATU PER SATU
 hostname
 nginx -t
 pgrep -a nginx
@@ -1651,7 +1419,6 @@ ss -lntp | grep ':80'
 **PENNY, OBLADA, MOLLY, SATU PER SATU.**
 
 ```bash
-# PASTE DI PENNY, OBLADA, MOLLY, SATU PER SATU
 hostname
 php-fpm8.4 -t
 ps -eo pid,args | grep '[p]hp-fpm: master process'
@@ -1661,7 +1428,6 @@ ls -l /run/php/php8.4-fpm.sock
 **CONSOLE ALPHA SETELAH SEMUA NODE START.**
 
 ```bash
-# PASTE DI CONSOLE ALPHA SETELAH SEMUA NODE START
 date -Is
 hostname
 ping -c 3 -W 2 1.1.1.1
@@ -1727,46 +1493,4 @@ curl --noproxy '*' --max-time 10 -sS -I http://abbey.k12.com/
 
 ---
 
-## Ringkasan Daftar Screenshot
 
-Total **90 screenshot**. Daftar lengkap dengan checkbox ada di [`SCREENSHOT-CHECKLIST.md`](SCREENSHOT-CHECKLIST.md).
-
-| Soal | Jumlah SS | Node utama |
-|---|---|---|
-| 1 | 14 | semua node |
-| 2 | 6 | semua node |
-| 3 | 3 | alpha, delta, salah satu: prab / penny / abbey / obladi |
-| 4 | 3 | prab, alpha, minimal alpha dan satu node lain |
-| 5 | 15 | semua node |
-| 6 | 2 | alpha, tedd |
-| 7 | 2 | alpha, delta |
-| 8 | 2 | alpha |
-| 9 | 3 | alpha, obladi, desmond |
-| 10 | 4 | alpha, oblada, molly |
-| 11 | 3 | alpha, penny, abbey |
-| 12 | 1 | alpha |
-| 13 | 1 | alpha |
-| 14 | 6 | semua node |
-| 15 | 3 | alpha, penny, abbey |
-| 16 | 3 | alpha |
-| 17 | 2 | prab, alpha |
-| 18 | 8 | prab, alpha |
-| 19 | 2 | alpha |
-| 20 | 7 | semua node |
-
----
-
-## Catatan dan Troubleshooting
-
-- Hostname harus sama dengan nama node GNS3; `common.sh` memakai `require_node` untuk mencegah script dijalankan di node yang salah.
-- Semua `curl` memakai `--noproxy '*'` agar tidak melewati proxy lingkungan.
-- Kredensial `/admin`: user `prabs`, password `pakar_pinter_jadi_gob***` (tiga tanda `*` adalah literal).
-- Serial SOA selalu dinaikkan otomatis oleh `04-dns.sh` dan `dns-edit.py`; keduanya akan memicu `notify` ke tedd.
-- Pada nomor 18, jangan melakukan `reset` cache selama pengamatan berlangsung, karena akan menghapus bukti fase cache.
-- Sebelum nomor 20, pastikan abbey sudah dipulihkan (`python3 /root/dns-edit.py restore`).
-- Export project GNS3 (`.gns3project`) dan seluruh script dikumpulkan ke link pengumpulan sesuai ketentuan soal.
-
-## Referensi
-
-- Modul Praktikum Jarkom 2026, Soal Praktikum Modul 2 (Shadow Net Operation)
-- Dokumentasi BIND9, Apache HTTP Server, Nginx, PHP-FPM, ApacheBench
