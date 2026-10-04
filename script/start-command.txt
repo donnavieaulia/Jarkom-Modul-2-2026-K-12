@@ -1,0 +1,2 @@
+# Isi kolom "Start command" pada template/node Docker GNS3 (semua 14 node)
+/bin/bash -c '/bin/bash /root/boot.sh || tail -n 60 /root/lab-boot.log; exec /bin/bash'
